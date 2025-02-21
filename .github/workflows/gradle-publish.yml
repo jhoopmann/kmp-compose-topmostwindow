@@ -33,7 +33,7 @@ jobs:
             - name: Setup JDK
               uses: actions/setup-java@4.7.0
               with:
-                  distributions: oracle
+                  distribution: oracle
                   java-version: "21"
                   architecture: ${{ matrix.system_architecture }}
 
