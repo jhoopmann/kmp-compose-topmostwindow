@@ -76,8 +76,9 @@ kotlin {
                 implementation(kotlin("reflect"))
                 implementation(compose.ui)
                 implementation(libs.androidx.lifecycle.runtime.compose)
-                implementation(files("../../kmp-topmostwindow/lib/build/libs/lib-macos-1.0.1.jar"))
-//                implementation("${libs.kmp.topmostwindow.get().group}:${libs.kmp.topmostwindow.get().name}-${targetJvmPlatform}:${libs.kmp.topmostwindow.get().version}")
+                libs.kmp.topmostwindow.get().also { tmw ->
+                    implementation("${tmw.group}:${tmw.name}-${targetJvmPlatform}:${tmw.version}")
+                }
             }
         }
 

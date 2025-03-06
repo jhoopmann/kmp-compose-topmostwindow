@@ -250,6 +250,8 @@ fun TopMostWindow(
                         }
 
                         if (!initialized) {
+                            initialized = true
+
                             with(composeTopMostWindow!!) {
                                 TopMostOptions(
                                     topMost = currentTopMost,
@@ -261,8 +263,6 @@ fun TopMostWindow(
 
                                         window.windowHandle
                                     })
-                                    
-                                    initialized = true
                                 }
                             }
                         } else {
