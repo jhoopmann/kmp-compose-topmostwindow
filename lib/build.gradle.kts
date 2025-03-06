@@ -9,7 +9,7 @@
 val targetJvmPlatform: String = project.findProperty("targetJvmPlatform")?.toString() ?: "macos"
 
 group = "de.jhoopmann.topmostwindow.compose"
-version = "1.0.1"
+version = "1.0.2"
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -76,7 +76,8 @@ kotlin {
                 implementation(kotlin("reflect"))
                 implementation(compose.ui)
                 implementation(libs.androidx.lifecycle.runtime.compose)
-                implementation("${libs.kmp.topmostwindow.get().group}:${libs.kmp.topmostwindow.get().name}-${targetJvmPlatform}:${libs.kmp.topmostwindow.get().version}")
+                implementation(files("../../kmp-topmostwindow/lib/build/libs/lib-macos-1.0.1.jar"))
+//                implementation("${libs.kmp.topmostwindow.get().group}:${libs.kmp.topmostwindow.get().name}-${targetJvmPlatform}:${libs.kmp.topmostwindow.get().version}")
             }
         }
 

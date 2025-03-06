@@ -116,6 +116,7 @@ fun TopMostWindow(
     }
 
     var composeTopMostWindow: ComposeTopMostWindow? by remember { mutableStateOf(null) }
+    var initialized: Boolean by remember { mutableStateOf(false) }
     LaunchedEffect(visible) {
         composeTopMostWindow?.setVisible(visible)
     }
@@ -248,19 +249,24 @@ fun TopMostWindow(
                             }
                         }
 
-                        with(composeTopMostWindow!!) {
-                            TopMostOptions(
-                                topMost = currentTopMost,
-                                sticky = currentSticky,
-                                skipTaskbar = currentSkipTaskbar
-                            ).also { options ->
-                                initialize(window, options, {
-                                    update()
+                        if (!initialized) {
+                            with(composeTopMostWindow!!) {
+                                TopMostOptions(
+                                    topMost = currentTopMost,
+                                    sticky = currentSticky,
+                                    skipTaskbar = currentSkipTaskbar
+                                ).also { options ->
+                                    initialize(window, options, {
+                                        update()
 
-                                    window.windowHandle
-                                }, {
-                                })
+                                        window.windowHandle
+                                    })
+                                    
+                                    initialized = true
+                                }
                             }
+                        } else {
+                            update()
                         }
                     }
                 }
