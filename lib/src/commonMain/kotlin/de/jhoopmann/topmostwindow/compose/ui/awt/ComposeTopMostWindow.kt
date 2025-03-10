@@ -6,7 +6,8 @@ import de.jhoopmann.topmostwindow.awt.ui.TopMostImpl
 
 open class ComposeTopMostWindow(
     open val composeWindow: ComposeWindow = ComposeWindow(),
-) : TopMost by TopMostImpl() {
+    open val delegate: TopMostImpl = TopMostImpl()
+) : TopMost by delegate {
     fun setVisible(visible: Boolean) {
         setVisible(visible) {
             composeWindow.setVisible(visible)

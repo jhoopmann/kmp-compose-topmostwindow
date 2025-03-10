@@ -32,13 +32,15 @@ import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.util.packFloats
 import androidx.compose.ui.window.*
 import androidx.compose.ui.window.rememberWindowState
-import de.jhoopmann.topmostwindow.awt.ui.TopMostOptions
+import de.jhoopmann.topmostwindow.awt.ui.*
 import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostWindow
 import de.jhoopmann.topmostwindow.compose.ui.util.ComposeWindowHelper
 import java.awt.Component
 import java.awt.Window
 import java.awt.event.*
 import javax.swing.JFrame
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
 
 /**
  * topMost (Natively sets Window above all other Windows)
@@ -64,6 +66,13 @@ fun TopMostWindow(
     focusable: Boolean = true,
     onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
     onKeyEvent: (KeyEvent) -> Boolean = { false },
+    beforeInitialization: ((TopMost, TopMostCompanion, TopMostOptions) -> Unit)? = { topMost, companion, options ->
+        companion.setPlatformOptionsBeforeInit(options)
+    },
+    afterInitialization: ((TopMost, TopMostCompanion, TopMostOptions) -> Unit)? = { topMost, companion, options ->
+        companion.setPlatformOptionsAfterInit(options)
+    },
+    create: () -> ComposeTopMostWindow = { ComposeTopMostWindow() },
     content: @Composable FrameWindowScope.() -> Unit,
 ) {
     val currentState: WindowState by rememberUpdatedState(state)
@@ -126,58 +135,61 @@ fun TopMostWindow(
         onPreviewKeyEvent = onPreviewKeyEvent,
         onKeyEvent = onKeyEvent,
         create = {
-            ComposeTopMostWindow(ComposeWindow().apply {
-                defaultCloseOperation = JFrame.DO_NOTHING_ON_CLOSE
+            create().let { it ->
+                composeTopMostWindow = it
+                initialized = false
 
-                ComposeWindowHelper.getListenerRegisterMethod<WindowListener>().call(
-                    listeners.windowListenerRef,
-                    this,
-                    object : WindowAdapter() {
-                        override fun windowClosing(e: WindowEvent) {
-                            currentOnCloseRequest.invoke()
+                it.composeWindow.apply {
+                    defaultCloseOperation = JFrame.DO_NOTHING_ON_CLOSE
+
+                    ComposeWindowHelper.getListenerRegisterMethod<WindowListener>().call(
+                        listeners.windowListenerRef,
+                        this,
+                        object : WindowAdapter() {
+                            override fun windowClosing(e: WindowEvent) {
+                                currentOnCloseRequest.invoke()
+                            }
                         }
-                    }
-                )
-
-                ComposeWindowHelper.getListenerRegisterMethod<WindowStateListener>().call(
-                    listeners.windowStateListenerRef,
-                    this,
-                    object : WindowStateListener {
-                        override fun windowStateChanged(p0: WindowEvent?) {
-                            currentState.isMinimized = isMinimized
-                            appliedState.placement = currentState.placement
-                            appliedState.isMinimized = currentState.isMinimized
-                        }
-                    }
-                )
-
-                ComposeWindowHelper.getListenerRegisterMethod<ComponentAdapter>().call(
-                    listeners.componentListenerRef,
-                    this,
-                    object : ComponentAdapter() {
-                        override fun componentResized(e: ComponentEvent) {
-                            currentState.placement = placement
-                            currentState.size = DpSize(width.dp, height.dp)
-                            appliedState.placement = currentState.placement
-                            appliedState.size = currentState.size
-                        }
-
-                        override fun componentMoved(e: ComponentEvent) {
-                            currentState.position = WindowPosition(x.dp, y.dp)
-                            appliedState.position = currentState.position
-                        }
-                    }
-                )
-
-                ComposeWindowHelper.getWindowLocationTracker().let { tracker ->
-                    ComposeWindowHelper.getWindowLocationTrackerOnWindowCreatedMethod().call(
-                        tracker,
-                        this
                     )
+
+                    ComposeWindowHelper.getListenerRegisterMethod<WindowStateListener>().call(
+                        listeners.windowStateListenerRef,
+                        this,
+                        object : WindowStateListener {
+                            override fun windowStateChanged(p0: WindowEvent?) {
+                                currentState.isMinimized = isMinimized
+                                appliedState.placement = currentState.placement
+                                appliedState.isMinimized = currentState.isMinimized
+                            }
+                        }
+                    )
+
+                    ComposeWindowHelper.getListenerRegisterMethod<ComponentAdapter>().call(
+                        listeners.componentListenerRef,
+                        this,
+                        object : ComponentAdapter() {
+                            override fun componentResized(e: ComponentEvent) {
+                                currentState.placement = placement
+                                currentState.size = DpSize(width.dp, height.dp)
+                                appliedState.placement = currentState.placement
+                                appliedState.size = currentState.size
+                            }
+
+                            override fun componentMoved(e: ComponentEvent) {
+                                currentState.position = WindowPosition(x.dp, y.dp)
+                                appliedState.position = currentState.position
+                            }
+                        }
+                    )
+
+                    ComposeWindowHelper.getWindowLocationTracker().let { tracker ->
+                        ComposeWindowHelper.getWindowLocationTrackerOnWindowCreatedMethod().call(
+                            tracker,
+                            this
+                        )
+                    }
                 }
-            }).apply {
-                composeTopMostWindow = this
-            }.composeWindow
+            }
         },
         update = { window ->
             ComposeWindowHelper.getComponentUpdaterUpdateMethod().call(
@@ -262,7 +274,7 @@ fun TopMostWindow(
                                         update()
 
                                         window.windowHandle
-                                    })
+                                    }, beforeInitialization, afterInitialization)
                                 }
                             }
                         } else {
