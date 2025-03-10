@@ -1,7 +1,7 @@
 /*
  * Code partially copied from KMP Desktop Window.desktop.kt
  *
- * added parameters: topMost, sticky, skipTaskbar
+ * added parameters: topMost, sticky, skipTaskbar, create, beforeInitialization, afterInitialization
  *
  *
  * ORIGINAL LICENSE:
