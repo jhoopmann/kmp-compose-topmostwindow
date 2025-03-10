@@ -56,7 +56,16 @@ TopMostWindow(
 
     topMost = true,
     sticky = true,
-    skipTaskbar = true
+    skipTaskbar = true,
+    beforeInitialization = { // nullable
+        /* Applies platform before initialization logic by default */
+    },
+    afterInitialization = { // nullable
+        /* Applies platform after initialization logic by default */
+    },
+    create = {
+        /* Creates ComposeTopMostWindow by default */
+    }
 ) {
    ...
 }
