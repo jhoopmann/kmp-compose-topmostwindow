@@ -31,15 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.util.packFloats
 import androidx.compose.ui.window.*
-import androidx.compose.ui.window.rememberWindowState
-import de.jhoopmann.topmostwindow.awt.ui.*
+import de.jhoopmann.topmostwindow.awt.ui.TopMost
+import de.jhoopmann.topmostwindow.awt.ui.TopMostCompanion
+import de.jhoopmann.topmostwindow.awt.ui.TopMostOptions
 import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostWindow
 import de.jhoopmann.topmostwindow.compose.ui.util.ComposeWindowHelper
 import java.awt.Component
 import java.awt.Window
 import java.awt.event.*
 import javax.swing.JFrame
-import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
 
 /**
@@ -66,11 +66,11 @@ fun TopMostWindow(
     focusable: Boolean = true,
     onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
     onKeyEvent: (KeyEvent) -> Boolean = { false },
-    beforeInitialization: ((TopMost, TopMostCompanion, TopMostOptions) -> Unit)? = { topMost, companion, options ->
-        companion.setPlatformOptionsBeforeInit(options)
+    beforeInitialization: ((TopMost, TopMostOptions) -> Unit)? = { topMost, options ->
+        (topMost::class.companionObjectInstance as TopMostCompanion).setPlatformOptionsBeforeInit(options)
     },
-    afterInitialization: ((TopMost, TopMostCompanion, TopMostOptions) -> Unit)? = { topMost, companion, options ->
-        companion.setPlatformOptionsAfterInit(options)
+    afterInitialization: ((TopMost, TopMostOptions) -> Unit)? = { topMost, options ->
+        (topMost::class.companionObjectInstance as TopMostCompanion).setPlatformOptionsAfterInit(options)
     },
     create: () -> ComposeTopMostWindow = { ComposeTopMostWindow() },
     content: @Composable FrameWindowScope.() -> Unit,
