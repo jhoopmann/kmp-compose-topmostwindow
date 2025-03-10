@@ -5,7 +5,7 @@
 kotlin = "2.1.10"
 androidx-lifecycle = "2.8.0"
 compose-plugin = "1.6.10"
-topmostwindow = "1.0.2"
+topmostwindow = "1.1.0"
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
