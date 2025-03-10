@@ -44,7 +44,7 @@ This library makes use of various methods of the specific OS functionalities.
 
 Currently, applying options is only possible in initialization. If you need to change options, you have to recreate the native instance, so by design we provide the options in the initialize function. Maybe this is going to be changed if required but it's difficult for example in macOS because of restrictions by the NSWindow consistency rules.
 
-
+On macOS, if you set ```beforeInitialization``` and ```afterInitialization``` parameter values, you have to call the TopMostImpl Companion methods ```setPlatformOptionsBeforeInit``` and ```setPlatformOptionsAfterInit```manually to apply ```NSApplicationActivationPolicy```. This is required if you want to initialize multiple TopMostWindow at the same time because of the macOS Dock event processing (displays multiple application images if received in short sequence).
 
 ## Usage as composable
 
