@@ -1,6 +1,9 @@
 package de.jhoopmann.topmostwindow.compose.ui.util
 
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.window.WindowDecoration
 import java.awt.Frame
 import java.awt.Window
 import java.lang.reflect.Method
@@ -118,6 +121,23 @@ object ComposeWindowHelper {
             .getDeclaredMethod("setIcon", Window::class.java, Painter::class.java).apply {
                 isAccessible = true
             }.kotlinFunction as KFunction2<Window, Painter?, Unit>
+    }
+
+    fun getUndecoratedWindowDecorationClass(): KClass<*> {
+        return Class.forName("androidx.compose.ui.window.UndecoratedWindowDecoration").kotlin
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    fun getWindowIsUndecorated(windowDecoration: WindowDecoration): Boolean {
+        return getUndecoratedWindowDecorationClass().isInstance(windowDecoration)
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    fun getResizerThicknessForWindowDecoration(windowDecoration: WindowDecoration): Dp {
+        return getUndecoratedWindowDecorationClass().members.first { it.name == "resizerThickness"}.run {
+            isAccessible = true
+            this.call(windowDecoration) as Dp
+        }
     }
 
     fun getWindowSetUndecoratedSafelyMethod(): KFunction2<Frame, Boolean, Unit> {

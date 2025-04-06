@@ -23,9 +23,11 @@
 package de.jhoopmann.topmostwindow.compose.ui.window
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
@@ -40,7 +42,9 @@ import java.awt.Component
 import java.awt.Window
 import java.awt.event.*
 import javax.swing.JFrame
+import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * topMost (Natively sets Window above all other Windows)
@@ -49,6 +53,7 @@ import kotlin.reflect.full.companionObjectInstance
  *  has no effect on macOS because non mainWindows never appear in Dock anyway, use sticky.
  *  has no effect on windows because non toolbox window without parent always appear in taskbar, use sticky.
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TopMostWindow(
     onCloseRequest: () -> Unit,
@@ -59,7 +64,7 @@ fun TopMostWindow(
     skipTaskbar: Boolean = true,
     title: String = "Untitled",
     icon: Painter? = null,
-    undecorated: Boolean = false,
+    decoration: WindowDecoration = WindowDecoration.SystemDefault,
     transparent: Boolean = false,
     resizable: Boolean = true,
     enabled: Boolean = true,
@@ -78,7 +83,7 @@ fun TopMostWindow(
     val currentState: WindowState by rememberUpdatedState(state)
     val currentTitle: String by rememberUpdatedState(title)
     val currentIcon: Painter? by rememberUpdatedState(icon)
-    val currentUndecorated: Boolean by rememberUpdatedState(undecorated)
+    val currentDecoration by rememberUpdatedState(decoration)
     val currentTransparent: Boolean by rememberUpdatedState(transparent)
     val currentResizable: Boolean by rememberUpdatedState(resizable)
     val currentEnabled: Boolean by rememberUpdatedState(enabled)
@@ -198,21 +203,29 @@ fun TopMostWindow(
                     override fun invoke(updateScope: Any) {
                         fun update() {
                             ComposeWindowHelper.getUpdateScopeSetMethod().apply {
-                                call(
-                                    updateScope, currentUndecorated,
-                                    { it: Boolean ->
-                                        ComposeWindowHelper.getWindowSetUndecoratedSafelyMethod()
-                                            .call(window, it)
-                                    })
+                                val isUndecorated: Boolean = ComposeWindowHelper.getWindowIsUndecorated(currentDecoration)
+                                var resizerThickness: Dp = WindowDecorationDefaults.ResizerThickness
+                                if (isUndecorated) {
+                                    resizerThickness = ComposeWindowHelper.getResizerThicknessForWindowDecoration(currentDecoration)
+                                }
+
                                 call(updateScope, currentTitle, window::setTitle)
                                 call(
                                     updateScope, currentIcon,
                                     { it: Painter? ->
                                         ComposeWindowHelper.getWindowSetIconMethod().call(window, it)
                                     })
+                                call(
+                                    updateScope, isUndecorated,
+                                    { it: Boolean ->
+                                        ComposeWindowHelper.getWindowSetUndecoratedSafelyMethod()
+                                            .call(window, it)
+                                    })
+
                                 call(updateScope, currentTransparent, window::isTransparent::set)
                                 call(updateScope, currentEnabled, window::setEnabled)
                                 call(updateScope, currentFocusable, window::setFocusableWindowState)
+                                call(updateScope, resizerThickness, window::undecoratedResizerThickness::set)
                             }
 
                             if (state.size != appliedState.size) {
