@@ -83,7 +83,7 @@ fun TopMostWindow(
     val currentState: WindowState by rememberUpdatedState(state)
     val currentTitle: String by rememberUpdatedState(title)
     val currentIcon: Painter? by rememberUpdatedState(icon)
-    val currentDecoration by rememberUpdatedState(decoration)
+    val currentDecoration: WindowDecoration by rememberUpdatedState(decoration)
     val currentTransparent: Boolean by rememberUpdatedState(transparent)
     val currentResizable: Boolean by rememberUpdatedState(resizable)
     val currentEnabled: Boolean by rememberUpdatedState(enabled)
@@ -162,6 +162,7 @@ fun TopMostWindow(
                         this,
                         object : WindowStateListener {
                             override fun windowStateChanged(p0: WindowEvent?) {
+                                currentState.placement = placement
                                 currentState.isMinimized = isMinimized
                                 appliedState.placement = currentState.placement
                                 appliedState.isMinimized = currentState.isMinimized
@@ -203,10 +204,12 @@ fun TopMostWindow(
                     override fun invoke(updateScope: Any) {
                         fun update() {
                             ComposeWindowHelper.getUpdateScopeSetMethod().apply {
-                                val isUndecorated: Boolean = ComposeWindowHelper.getWindowIsUndecorated(currentDecoration)
+                                val isUndecorated: Boolean =
+                                    ComposeWindowHelper.getWindowIsUndecorated(currentDecoration)
                                 var resizerThickness: Dp = WindowDecorationDefaults.ResizerThickness
                                 if (isUndecorated) {
-                                    resizerThickness = ComposeWindowHelper.getResizerThicknessForWindowDecoration(currentDecoration)
+                                    resizerThickness =
+                                        ComposeWindowHelper.getResizerThicknessForWindowDecoration(currentDecoration)
                                 }
 
                                 call(updateScope, currentTitle, window::setTitle)
