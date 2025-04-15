@@ -8,3 +8,4 @@
 
 rootProject.name = "kmp-compose-topmostwindow"
 include(":lib")
+includeBuild("../kmp-topmostwindow")
