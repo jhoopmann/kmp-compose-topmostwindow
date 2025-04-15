@@ -39,9 +39,6 @@ import de.jhoopmann.topmostwindow.awt.ui.TopMostOptions
 import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostWindow
 import de.jhoopmann.topmostwindow.compose.ui.util.ComposeWindowHelper
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.jetbrains.skiko.MainUIDispatcher
 import java.awt.Component
 import java.awt.Window
 import java.awt.event.*
@@ -80,7 +77,9 @@ fun TopMostWindow(
     onAfterInitialization: ((TopMost, TopMostOptions) -> Unit)? = { topMost, options ->
         (topMost::class.companionObjectInstance as TopMostCompanion).setPlatformOptionsAfterInit(options)
     },
-    create: () -> ComposeTopMostWindow = { ComposeTopMostWindow() },
+    create: (update: (ComposeWindow) -> Unit) -> ComposeTopMostWindow = {
+        ComposeTopMostWindow(it)
+    },
     content: @Composable FrameWindowScope.() -> Unit,
 ) {
     val currentState: WindowState by rememberUpdatedState(state)
@@ -246,8 +245,7 @@ fun TopMostWindow(
         onPreviewKeyEvent = onPreviewKeyEvent,
         onKeyEvent = onKeyEvent,
         create = {
-            create().let {
-                it.update = update
+            create(update).let {
                 onCreate?.invoke(it)
 
                 composeTopMostWindow = it
