@@ -4,7 +4,7 @@
 [versions]
 kotlin = "2.1.10"
 androidx-lifecycle = "2.8.0"
-compose-plugin = "1.6.10"
+compose-plugin = "1.7.3"
 topmostwindow = "1.1.0"
 
 [plugins]
