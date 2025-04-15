@@ -137,6 +137,7 @@ fun TopMostWindow(
 
     val update: (ComposeWindow) -> Unit = remember {
         { window ->
+            println ("UPDATE")
             ComposeWindowHelper.getComponentUpdaterUpdateMethod().call(
                 updater,
                 object : Function1<Any, Unit> {

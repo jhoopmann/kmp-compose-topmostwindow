@@ -11,7 +11,9 @@ open class ComposeTopMostWindow(
     open lateinit var update: (ComposeWindow) -> Unit
 
     open fun setVisible(visible: Boolean) {
-        update.invoke(composeWindow)
+        if (visible) {
+            update.invoke(composeWindow)
+        }
 
         setVisible(visible) {
             composeWindow.setVisible(visible)
