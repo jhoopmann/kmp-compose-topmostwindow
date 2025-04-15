@@ -33,9 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.util.packFloats
 import androidx.compose.ui.window.*
-import de.jhoopmann.topmostwindow.awt.ui.TopMost
-import de.jhoopmann.topmostwindow.awt.ui.TopMostCompanion
-import de.jhoopmann.topmostwindow.awt.ui.TopMostOptions
+import de.jhoopmann.topmostwindow.awt.ui.*
 import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostWindow
 import de.jhoopmann.topmostwindow.compose.ui.util.ComposeWindowHelper
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -43,15 +41,7 @@ import java.awt.Component
 import java.awt.Window
 import java.awt.event.*
 import javax.swing.JFrame
-import kotlin.reflect.full.companionObjectInstance
 
-/**
- * topMost (Natively sets Window above all other Windows)
- * sticky (Natively sets Window to appear on all Spaces)
- * skipTaskbar (Natively hides Window from taskbar):
- *  has no effect on macOS because non mainWindows never appear in Dock anyway, use sticky.
- *  has no effect on windows because non toolbox window without parent always appear in taskbar, use sticky.
- */
 @OptIn(ExperimentalComposeUiApi::class, DelicateCoroutinesApi::class)
 @Composable
 fun TopMostWindow(
@@ -70,16 +60,9 @@ fun TopMostWindow(
     focusable: Boolean = true,
     onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
     onKeyEvent: (KeyEvent) -> Boolean = { false },
-    onCreate: ((ComposeTopMostWindow) -> Unit)? = null,
-    onBeforeInitialization: ((TopMost, TopMostOptions) -> Unit)? = { topMost, options ->
-        (topMost::class.companionObjectInstance as TopMostCompanion).setPlatformOptionsBeforeInit(options)
-    },
-    onAfterInitialization: ((TopMost, TopMostOptions) -> Unit)? = { topMost, options ->
-        (topMost::class.companionObjectInstance as TopMostCompanion).setPlatformOptionsAfterInit(options)
-    },
-    create: (update: (ComposeWindow) -> Unit) -> ComposeTopMostWindow = {
-        ComposeTopMostWindow(it)
-    },
+    onCreate: OnCreateTopMostWindowEvent = null,
+    beforeInitialization: InitializationEvent? = DefaultBeforeInitializationEvent,
+    afterInitialization: InitializationEvent? = DefaultAfterInitializationEvent,
     content: @Composable FrameWindowScope.() -> Unit,
 ) {
     val currentState: WindowState by rememberUpdatedState(state)
@@ -228,7 +211,7 @@ fun TopMostWindow(
                                         update()
 
                                         window.windowHandle
-                                    }, onBeforeInitialization, onAfterInitialization)
+                                    }, beforeInitialization, afterInitialization)
                                 }
                             }
                         } else {
@@ -245,7 +228,8 @@ fun TopMostWindow(
         onPreviewKeyEvent = onPreviewKeyEvent,
         onKeyEvent = onKeyEvent,
         create = {
-            create(update).let {
+            ComposeTopMostWindow().let {
+                it.update = update
                 onCreate?.invoke(it)
 
                 composeTopMostWindow = it
@@ -316,7 +300,5 @@ fun TopMostWindow(
         content = content
     )
 
-    LaunchedEffect(visible) {
-        composeTopMostWindow?.setVisible(visible)
-    }
+    composeTopMostWindow?.setVisible(visible)
 }

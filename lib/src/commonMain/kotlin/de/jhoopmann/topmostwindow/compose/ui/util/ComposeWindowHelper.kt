@@ -13,7 +13,7 @@ import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.kotlinFunction
 
-object ComposeWindowHelper {
+internal object ComposeWindowHelper {
     fun getAccessibleClassConstructor(name: String, vararg parameters: KType): KFunction<Any> {
         return Class.forName(name).kotlin.constructors.find { c ->
             c.parameters.filterIndexed { i, p ->

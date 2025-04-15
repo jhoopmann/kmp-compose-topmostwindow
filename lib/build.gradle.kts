@@ -7,6 +7,9 @@
  */
 
 val targetJvmPlatform: String = project.findProperty("targetJvmPlatform")?.toString() ?: "macos"
+val supportedJavaVersion: String = if (JavaVersion.current().toString().toInt() <= "21".toInt()) {
+    JavaVersion.VERSION_17.toString()
+} else JavaVersion.current().toString()
 
 group = "de.jhoopmann.topmostwindow.compose"
 version = "1.1.0"
@@ -66,7 +69,7 @@ repositories {
 kotlin {
     jvm(targetJvmPlatform) {
         compilations.all {
-            kotlinOptions.jvmTarget = "21"
+            kotlinOptions.jvmTarget = supportedJavaVersion
         }
     }
 
@@ -77,9 +80,11 @@ kotlin {
                 implementation(compose.ui)
                 implementation(libs.androidx.lifecycle.runtime.compose)
 
-                libs.kmp.topmostwindow.get().also { tmw ->
-                    implementation("${tmw.group}:${tmw.name}-${targetJvmPlatform}:${tmw.version}")
-                }
+                implementation("de.jhoopmann.topmostwindow.awt:lib")
+
+//                libs.kmp.topmostwindow.get().also { tmw ->
+//                    implementation("${tmw.group}:${tmw.name}-${targetJvmPlatform}:${tmw.version}")
+//                }
             }
         }
 
@@ -99,6 +104,6 @@ kotlin {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(supportedJavaVersion.toInt())
     }
 }
