@@ -21,6 +21,7 @@ fun getResizerThicknessForWindowDecoration(windowDecoration: WindowDecoration): 
 
 
 ### Changed
+class ComposeTopMostWindow internal constructor
 internal object ComposeWindowHelper
 fun TopMostWindow(
     decoration: WindowDecoration = WindowDecoration.SystemDefault,
