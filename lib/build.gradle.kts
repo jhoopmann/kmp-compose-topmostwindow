@@ -7,7 +7,7 @@
  */
 
 val targetJvmPlatform: String = project.findProperty("targetJvmPlatform")?.toString() ?: "macos"
-val supportedJavaVersion: String = if (JavaVersion.current().toString().toInt() <= "21".toInt()) {
+val supportedJavaVersion: String = if (JavaVersion.current().toString().toInt() < "21".toInt()) {
     JavaVersion.VERSION_17.toString()
 } else JavaVersion.current().toString()
 
