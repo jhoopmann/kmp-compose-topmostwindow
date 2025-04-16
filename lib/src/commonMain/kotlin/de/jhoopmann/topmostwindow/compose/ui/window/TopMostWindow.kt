@@ -300,5 +300,7 @@ fun TopMostWindow(
         content = content
     )
 
-    composeTopMostWindow?.setVisible(visible)
+    LaunchedEffect(visible) {
+        composeTopMostWindow?.setVisible(visible)
+    }
 }
