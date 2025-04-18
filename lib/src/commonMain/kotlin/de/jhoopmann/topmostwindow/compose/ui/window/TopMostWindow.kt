@@ -33,16 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.util.packFloats
 import androidx.compose.ui.window.*
-import de.jhoopmann.topmostwindow.awt.ui.*
+import de.jhoopmann.topmostwindow.awt.ui.DefaultAfterInitializationEvent
+import de.jhoopmann.topmostwindow.awt.ui.DefaultBeforeInitializationEvent
+import de.jhoopmann.topmostwindow.awt.ui.InitializationEvent
+import de.jhoopmann.topmostwindow.awt.ui.TopMostOptions
 import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostWindow
 import de.jhoopmann.topmostwindow.compose.ui.util.ComposeWindowHelper
-import kotlinx.coroutines.DelicateCoroutinesApi
 import java.awt.Component
 import java.awt.Window
 import java.awt.event.*
 import javax.swing.JFrame
 
-@OptIn(ExperimentalComposeUiApi::class, DelicateCoroutinesApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TopMostWindow(
     onCloseRequest: () -> Unit,
@@ -60,7 +62,7 @@ fun TopMostWindow(
     focusable: Boolean = true,
     onPreviewKeyEvent: (KeyEvent) -> Boolean = { false },
     onKeyEvent: (KeyEvent) -> Boolean = { false },
-    onCreate: OnCreateTopMostWindowEvent = null,
+    onCreate: CreateTopMostWindowEvent = null,
     beforeInitialization: InitializationEvent? = DefaultBeforeInitializationEvent,
     afterInitialization: InitializationEvent? = DefaultAfterInitializationEvent,
     content: @Composable FrameWindowScope.() -> Unit,
@@ -78,8 +80,8 @@ fun TopMostWindow(
     val currentSticky: Boolean by rememberUpdatedState(sticky)
     val currentSkipTaskbar: Boolean by rememberUpdatedState(skipTaskbar)
 
-    var composeTopMostWindow: ComposeTopMostWindow? by remember { mutableStateOf(null) }
-    var initialized: Boolean by remember { mutableStateOf(false) }
+    var currentComposeTopMostWindow: ComposeTopMostWindow? by remember { mutableStateOf(null) }
+    var currentInitialized: Boolean by remember { mutableStateOf(false) }
 
     val updater = remember { ComposeWindowHelper.getComponentUpdater() }
 
@@ -198,10 +200,10 @@ fun TopMostWindow(
                             }
                         }
 
-                        if (!initialized) {
-                            initialized = true
+                        if (!currentInitialized) {
+                            currentInitialized = true
 
-                            with(composeTopMostWindow!!) {
+                            with(currentComposeTopMostWindow!!) {
                                 TopMostOptions(
                                     topMost = currentTopMost,
                                     sticky = currentSticky,
@@ -229,11 +231,10 @@ fun TopMostWindow(
         onKeyEvent = onKeyEvent,
         create = {
             ComposeTopMostWindow().let {
-                it.update = update
-                onCreate?.invoke(it)
-
-                composeTopMostWindow = it
-                initialized = false
+                currentComposeTopMostWindow = it.apply {
+                    this.update = update
+                    onCreate?.invoke(this)
+                }
 
                 it.composeWindow.apply {
                     defaultCloseOperation = JFrame.DO_NOTHING_ON_CLOSE
@@ -290,17 +291,21 @@ fun TopMostWindow(
         },
         update = update,
         dispose = {
+            currentInitialized = false
+
             ComposeWindowHelper.getWindowLocationTracker().let { tracker ->
                 ComposeWindowHelper.getWindowLocationTrackerOnWindowDisposedMethod()
                     .call(tracker, it)
             }
             listeners.removeFromAndClear(it)
             it.dispose()
+
+            currentComposeTopMostWindow = null
         },
         content = content
     )
 
     LaunchedEffect(visible) {
-        composeTopMostWindow?.setVisible(visible)
+        currentComposeTopMostWindow?.setVisible(visible)
     }
 }
