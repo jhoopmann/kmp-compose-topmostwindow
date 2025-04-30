@@ -8,4 +8,3 @@
 
 rootProject.name = "kmp-compose-stickywindow"
 include(":lib")
-includeBuild("../kmp-topmostwindow")

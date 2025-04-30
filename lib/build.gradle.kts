@@ -80,11 +80,9 @@ kotlin {
                 implementation(compose.ui)
                 implementation(libs.androidx.lifecycle.runtime.compose)
 
-                implementation("de.jhoopmann.stickywindow.awt:lib")
-
-//                libs.kmp.stickywindow.get().also { tmw ->
-//                    implementation("${tmw.group}:${tmw.name}-${targetJvmPlatform}:${tmw.version}")
-//                }
+                libs.kmp.stickywindow.get().also { tmw ->
+                    implementation("${tmw.group}:${tmw.name}-${targetJvmPlatform}:${tmw.version}")
+                }
             }
         }
 
