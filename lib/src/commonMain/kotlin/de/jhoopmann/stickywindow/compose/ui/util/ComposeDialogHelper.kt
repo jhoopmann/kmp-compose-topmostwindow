@@ -1,4 +1,4 @@
-package de.jhoopmann.topmostwindow.compose.ui.util
+package de.jhoopmann.stickywindow.compose.ui.util
 
 import androidx.compose.runtime.CompositionLocal
 import java.awt.Dialog

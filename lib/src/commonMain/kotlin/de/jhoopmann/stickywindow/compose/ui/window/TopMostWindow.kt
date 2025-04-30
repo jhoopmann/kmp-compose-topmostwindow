@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-package de.jhoopmann.topmostwindow.compose.ui.window
+package de.jhoopmann.stickywindow.compose.ui.window
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -28,10 +28,10 @@ import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.window.*
-import de.jhoopmann.topmostwindow.awt.ui.DefaultPlatformAfterInitialization
-import de.jhoopmann.topmostwindow.awt.ui.DefaultPlatformBeforeInitialization
-import de.jhoopmann.topmostwindow.awt.ui.InitializationEvent
-import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostWindow
+import de.jhoopmann.stickywindow.awt.ui.DefaultPlatformAfterInitialization
+import de.jhoopmann.stickywindow.awt.ui.DefaultPlatformBeforeInitialization
+import de.jhoopmann.stickywindow.awt.ui.InitializationEvent
+import de.jhoopmann.stickywindow.compose.ui.awt.ComposeTopMostWindow
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

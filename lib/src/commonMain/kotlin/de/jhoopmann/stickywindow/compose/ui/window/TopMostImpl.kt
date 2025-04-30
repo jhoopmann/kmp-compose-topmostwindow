@@ -1,4 +1,4 @@
-package de.jhoopmann.topmostwindow.compose.ui.window
+package de.jhoopmann.stickywindow.compose.ui.window
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -12,11 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.util.packFloats
 import androidx.compose.ui.window.*
-import de.jhoopmann.topmostwindow.awt.ui.*
-import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostImpl
-import de.jhoopmann.topmostwindow.compose.ui.awt.ComposeTopMostWindow
-import de.jhoopmann.topmostwindow.compose.ui.util.ComposeDialogHelper
-import de.jhoopmann.topmostwindow.compose.ui.util.ComposeWindowHelper
+import de.jhoopmann.stickywindow.awt.ui.*
+import de.jhoopmann.stickywindow.compose.ui.awt.ComposeTopMostImpl
+import de.jhoopmann.stickywindow.compose.ui.awt.ComposeTopMostWindow
+import de.jhoopmann.stickywindow.compose.ui.util.ComposeDialogHelper
+import de.jhoopmann.stickywindow.compose.ui.util.ComposeWindowHelper
 import java.awt.Component
 import java.awt.Window
 import java.awt.event.*

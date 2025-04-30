@@ -11,7 +11,7 @@ val supportedJavaVersion: String = if (JavaVersion.current().toString().toInt() 
     JavaVersion.VERSION_17.toString()
 } else JavaVersion.current().toString()
 
-group = "de.jhoopmann.topmostwindow.compose"
+group = "de.jhoopmann.stickywindow.compose"
 version = "1.2.0"
 
 plugins {
@@ -25,7 +25,7 @@ publishing {
     repositories {
         maven {
             name = "GithubKmpTopMostWindow"
-            url = uri("https://maven.pkg.github.com/jhoopmann/kmp-compose-topmostwindow")
+            url = uri("https://maven.pkg.github.com/jhoopmann/kmp-compose-stickywindow")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
@@ -35,8 +35,8 @@ publishing {
 
     publications {
         create<MavenPublication>("targetJvmPlatform") {
-            groupId = "de.jhoopmann.topmostwindow.compose"
-            artifactId = "kmp-compose-topmostwindow-$targetJvmPlatform"
+            groupId = "de.jhoopmann.stickywindow.compose"
+            artifactId = "kmp-compose-stickywindow-$targetJvmPlatform"
             version = project.version.toString()
 
             afterEvaluate {
@@ -58,7 +58,7 @@ repositories {
 
     maven {
         name = "GithubKmpTopmostWindow"
-        url = uri("https://maven.pkg.github.com/jhoopmann/kmp-topmostwindow")
+        url = uri("https://maven.pkg.github.com/jhoopmann/kmp-stickywindow")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = System.getenv("GITHUB_TOKEN")
@@ -80,9 +80,9 @@ kotlin {
                 implementation(compose.ui)
                 implementation(libs.androidx.lifecycle.runtime.compose)
 
-                implementation("de.jhoopmann.topmostwindow.awt:lib")
+                implementation("de.jhoopmann.stickywindow.awt:lib")
 
-//                libs.kmp.topmostwindow.get().also { tmw ->
+//                libs.kmp.stickywindow.get().also { tmw ->
 //                    implementation("${tmw.group}:${tmw.name}-${targetJvmPlatform}:${tmw.version}")
 //                }
             }

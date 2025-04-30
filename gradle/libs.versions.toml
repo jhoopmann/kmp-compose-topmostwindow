@@ -14,4 +14,4 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugi
 
 [libraries]
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
-kmp-topmostwindow = { group = "de.jhoopmann.topmostwindow.awt", name = "kmp-topmostwindow", version.ref="topmostwindow"}
+kmp-stickywindow = { group = "de.jhoopmann.stickywindow.awt", name = "kmp-stickywindow", version.ref="topmostwindow"}

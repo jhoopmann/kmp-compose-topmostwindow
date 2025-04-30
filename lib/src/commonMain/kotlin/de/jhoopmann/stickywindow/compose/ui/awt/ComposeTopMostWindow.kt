@@ -1,7 +1,7 @@
-package de.jhoopmann.topmostwindow.compose.ui.awt
+package de.jhoopmann.stickywindow.compose.ui.awt
 
 import androidx.compose.ui.awt.ComposeWindow
-import de.jhoopmann.topmostwindow.awt.ui.TopMostImpl
+import de.jhoopmann.stickywindow.awt.ui.TopMostImpl
 
 class ComposeTopMostWindow internal constructor(
     composeWindow: ComposeWindow = ComposeWindow(),

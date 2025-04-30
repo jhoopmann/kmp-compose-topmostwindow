@@ -1,7 +1,7 @@
-package de.jhoopmann.topmostwindow.compose.ui.awt
+package de.jhoopmann.stickywindow.compose.ui.awt
 
-import de.jhoopmann.topmostwindow.awt.ui.TopMost
-import de.jhoopmann.topmostwindow.awt.ui.TopMostImpl
+import de.jhoopmann.stickywindow.awt.ui.TopMost
+import de.jhoopmann.stickywindow.awt.ui.TopMostImpl
 import java.awt.Window
 
 open class ComposeTopMostImpl<T : Window> internal constructor(

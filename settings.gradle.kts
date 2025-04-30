@@ -6,6 +6,6 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = "kmp-compose-topmostwindow"
+rootProject.name = "kmp-compose-stickywindow"
 include(":lib")
 includeBuild("../kmp-topmostwindow")

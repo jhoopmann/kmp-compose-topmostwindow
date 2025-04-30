@@ -1,11 +1,11 @@
 # Kotlin Multiplatform Compose TopMostWindow Library
 
-Compose Library for kmp-topmostwindow (https://github.com/jhoopmann/kmp-topmostwindow)
+Compose Library for kmp-stickywindow (https://github.com/jhoopmann/kmp-stickywindow)
 
 ## Introduction
 This library provides an extended Composable Window of Jetpack Compose Desktop (ComposeWindow -> AWTWindow) with functionality to set the AWT window as topmost and sticky natively above all other windows and fullscreen applications. Also you can skip the creation of the taskbar item on X11 Linux systems.
 
-Usage example: [https://github.com/jhoopmann/kmp-topmostmenu/blob/main/lib/src/commonMain/kotlin/de/jhoopmann/topmostmenu/compose/ui/Menu.kt](https://github.com/jhoopmann/kmp-topmostmenu/blob/7985687779000f115563407a3f6ef2da9ade0d50/lib/src/commonMain/kotlin/de/jhoopmann/topmostmenu/compose/ui/Menu.kt#L163)
+Usage example: [https://github.com/jhoopmann/kmp-menukit/blob/main/lib/src/commonMain/kotlin/de/jhoopmann/menukit/compose/ui/Menu.kt](https://github.com/jhoopmann/kmp-menukit/blob/7985687779000f115563407a3f6ef2da9ade0d50/lib/src/commonMain/kotlin/de/jhoopmann/menukit/compose/ui/Menu.kt#L163)
 
 #### Wording:
 
@@ -51,7 +51,7 @@ On macOS, if you set ```beforeInitialization``` and ```afterInitialization``` pa
 ## Usage as composable
 
 ```
-import de.jhoopmann.topmostwindow.compose.ui.window.TopMostWindow
+import de.jhoopmann.stickywindow.compose.ui.window.TopMostWindow
 
 TopMostWindow(
     /* all possible options of composable Window except alwaysOnTop (replaced by topMost) */
